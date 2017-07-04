@@ -259,25 +259,4 @@ if __name__ == '__main__':
     webbrowser.open('http://127.0.0.1:8050/', new=0, autoraise=True) 
     app.run_server(debug=True, use_reloader=False)
 
-
-
-
-
-y = plot(dict( data =  flight_paths, layout=layout ), config=conf, output_type='div' )
-
-
-conf = dict(scrollZoom = True,
-            displaylogo= False,
-            showLink = False,
-            modeBarButtonsToRemove = [
-            'sendDataToCloud',
-            'zoomIn2d',
-            'zoomOut2d',
-            'hoverClosestCartesian',
-            'hoverCompareCartesian',
-            'hoverClosest3d',
-            'hoverClosestGeo',
-            'resetScale2d'])
-    
-    
    
