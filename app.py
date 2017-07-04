@@ -16,7 +16,7 @@ import numpy as np
 import json
 from dplython import *
 
-floder = "..\\airport"
+floder = "..\\airport\\"
 airlines = pd.read_csv(floder + 'airlines.csv')
 airports = pd.read_csv(floder + 'airports.csv')
 LDD = pd.read_excel(floder + 'LDD.xlsx')
