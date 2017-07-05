@@ -102,6 +102,7 @@ maxf = (ffk
     >> X.loc[0][0]                       
 )
 
+
 server = Flask(__name__)
 app = dash.Dash(name = __name__, server = server)
 
@@ -196,63 +197,73 @@ def update_fig(index_time):
 @app.callback(
     Output('outt', 'children'),
     [Input('graph-with-slider', 'hoverData')])
-def display_hover_data(Data):
-    n = Data['points'][0]['pointNumber']
-    return airLL.iloc[int(n)]['Name']
+def display_hover_data0(Data):
+    r = ''
+    if str(type(Data))!="<class 'NoneType'>":
+        n = Data['points'][0]['pointNumber']
+        r = airLL.iloc[int(n)]['Name']
+    return r
 
 @app.callback(
     Output('Line-S', 'figure'),
     [Input('graph-with-slider', 'hoverData'),
      Input('time-slider', 'value')           ])
-def display_hover_data(Data, index_time):
+def display_hover_data1(Data, index_time):
+    
     s = index_time[0]+1
     e = index_time[1]+1
+    data = go.Pie()
     
-    n = Data['points'][0]['pointNumber']
-    iata = airLL.iloc[n]['IATA']
-    dd = (
-    DplyFrame(ffk) 
-    >> sift( X['Source Airport'] == iata, X.d >= s, X.d <= e)
-    >> group_by(X['Destination Airport'])
-    >> summarize( counts = X.Airtime.size)
-    )
+    if str(type(Data))!="<class 'NoneType'>":
+        n = Data['points'][0]['pointNumber']
+        iata = airLL.iloc[n]['IATA'] 
+        dd = (
+        DplyFrame(ffk) 
+        >> sift( X['Source Airport'] == iata, X.d >= s, X.d <= e)
+        >> group_by(X['Destination Airport'])
+        >> summarize( counts = X.Airtime.size)
+        )
     
-    dd = pd.merge(dd, airLL, how='left', left_on = 'Destination Airport',  right_on = "IATA")
+        dd = pd.merge(dd, airLL, how='left', left_on = 'Destination Airport',  right_on = "IATA")
     
-    trace = go.Pie(
-        labels = dd['Description'],
-        values = dd.counts, 
-        hoverinfo='label+percent', 
-        textinfo='value',
-    ) 
-    
-    return dict(data = [trace], layout = layoutS)
+        trace = go.Pie(
+            labels = dd['Description'],
+            values = dd.counts, 
+            hoverinfo='label+percent', 
+            textinfo='value',
+        ) 
+        data = [trace]
+        
+    return dict(data = data, layout = layoutS)
 
 @app.callback(
     Output('Line-D', 'figure'),
     [Input('graph-with-slider', 'hoverData'),
      Input('time-slider', 'value')           ])
-def display_hover_data(Data, index_time):
+def display_hover_data2(Data, index_time):
+    
     s = index_time[0]+1
     e = index_time[1]+1
+    data = go.Pie()
     
-    n = Data['points'][0]['pointNumber']
-    iata = airLL.iloc[n]['IATA']
-    dd = (
-    DplyFrame(ffk) 
-    >> sift( X['Destination Airport'] == iata, X.d >= s, X.d <= e)
-    >> group_by(X['Source Airport'])
-    >> summarize( counts = X.Airtime.size)
-    )
-    
-    dd = pd.merge(dd, airLL, how='left', left_on = 'Source Airport',  right_on = "IATA")
-    
-    trace = go.Pie(
-        labels = dd['Description'],
-        values = dd.counts, 
-        hoverinfo='label+percent', 
-        textinfo='value',
-    ) 
-    
-    return dict(data = [trace], layout = layoutD)
- 
+    if str(type(Data))!="<class 'NoneType'>":
+        n = Data['points'][0]['pointNumber']
+        iata = airLL.iloc[n]['IATA']
+        dd = (
+        DplyFrame(ffk) 
+        >> sift( X['Destination Airport'] == iata, X.d >= s, X.d <= e)
+        >> group_by(X['Source Airport'])
+        >> summarize( counts = X.Airtime.size)
+        )
+        
+        dd = pd.merge(dd, airLL, how='left', left_on = 'Source Airport',  right_on = "IATA")
+        
+        trace = go.Pie(
+            labels = dd['Description'],
+            values = dd.counts, 
+            hoverinfo='label+percent', 
+            textinfo='value',
+        ) 
+        data = [trace]
+        
+    return dict(data = data, layout = layoutD)
