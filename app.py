@@ -256,7 +256,5 @@ def display_hover_data(Data, index_time):
     return dict(data = [trace], layout = layoutD)
 
 if __name__ == '__main__':
-    webbrowser.open('http://127.0.0.1:8050/', new=0, autoraise=True) 
     app.run_server(debug=True, use_reloader=False)
-
-   
+  
