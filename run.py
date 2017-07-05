@@ -16,11 +16,10 @@ import numpy as np
 import json
 from dplython import *
 
-floder = "..\\airport\\"
-airlines = pd.read_csv(floder + 'airlines.csv')
-airports = pd.read_csv(floder + 'airports.csv')
-LDD = pd.read_excel(floder + 'LDD.xlsx')
-flights = pd.read_csv(floder + 'flights.csv')
+airlines = pd.read_csv('airlines.csv')
+airports = pd.read_csv('airports.csv')
+LDD = pd.read_excel('LDD.xlsx')
+flights = pd.read_csv('flights.csv')
 
 da = (
 DplyFrame(flights) 
