@@ -18,7 +18,7 @@ from dplython import *
 
 airlines = pd.read_csv('airlines.csv')
 airports = pd.read_csv('airports.csv')
-LDD = pd.read_excel('LDD.xlsx')
+LDD = pd.read_csv('LDD.csv')
 flights = pd.read_csv('flights.csv')
 
 da = (
