@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 import json
 from dplython import *
+from flask import Flask
 
 airlines = pd.read_csv('airlines.csv')
 airports = pd.read_csv('airports.csv')
@@ -101,7 +102,8 @@ maxf = (ffk
     >> X.loc[0][0]                       
 )
 
-app = dash.Dash()
+server = Flask(__name__)
+app = dash.Dash(name = __name__, server = server)
 
 app.layout = html.Pre([
     '\n',
@@ -253,7 +255,4 @@ def display_hover_data(Data, index_time):
     ) 
     
     return dict(data = [trace], layout = layoutD)
-
-if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=False)
-  
+ 
