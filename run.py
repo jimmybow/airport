@@ -14,11 +14,11 @@ import pandas as pd
 from dplython import *
 from flask import Flask
 
+del(diamonds)
+
 airports = pd.read_csv('airports.csv')
 LDD = pd.read_csv('LDD.csv')
 ffk = pd.read_csv('ffk.csv')
-
-del(diamonds)
 
 da = (
 DplyFrame(ffk) 
