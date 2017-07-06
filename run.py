@@ -28,7 +28,7 @@ del(ff2)
 da = (
 DplyFrame(ffk) 
 >> group_by(X['Flight date'])
->> summarize( counts = X.Airtime.size, d=X.d.max())
+>> summarize( counts = X.d.size, d=X.d.max())
 >> arrange(X.d)
 >> X.reset_index().drop('index', 1)
 )
@@ -92,7 +92,7 @@ aps = [ dict(
 maxf = (
 DplyFrame(ffk)    
 >> group_by(X['Source Airport'], X['Destination Airport']) 
->> summarize(cc = X.Airtime.size )
+>> summarize(cc = X.d.size )
 >> ungroup()
 >> summarize(m = X.cc.max())
 >> X.loc[0][0]                       
@@ -167,7 +167,7 @@ def update_fig(index_time):
     DplyFrame(ffk)
     >> sift(X.d >= s, X.d <= e)     
     >> group_by(X['Source Airport'], X['Destination Airport']) 
-    >> mutate(cnt = X.Airtime.size )                       
+    >> mutate(cnt = X.d.size )                       
     >> X.drop_duplicates(['Source Airport','Destination Airport']) 
     )
 #ff.cnt.isin([np.nan]).sum()  # 無遺失值
@@ -218,7 +218,7 @@ def display_hover_data1(Data, index_time):
         DplyFrame(ffk) 
         >> sift( X['Source Airport'] == iata, X.d >= s, X.d <= e)
         >> group_by(X['Destination Airport'])
-        >> summarize( counts = X.Airtime.size)
+        >> summarize( counts = X.d.size)
         )
     
         dd = pd.merge(dd, airLL, how='left', left_on = 'Destination Airport',  right_on = "IATA")
@@ -250,7 +250,7 @@ def display_hover_data2(Data, index_time):
         DplyFrame(ffk) 
         >> sift( X['Destination Airport'] == iata, X.d >= s, X.d <= e)
         >> group_by(X['Source Airport'])
-        >> summarize( counts = X.Airtime.size)
+        >> summarize( counts = X.d.size)
         )
         
         dd = pd.merge(dd, airLL, how='left', left_on = 'Source Airport',  right_on = "IATA")
