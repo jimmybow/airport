@@ -18,7 +18,12 @@ del(diamonds)
 
 airports = pd.read_csv('airports.csv')
 LDD = pd.read_csv('LDD.csv')
-ffk = pd.read_csv('ffk.csv')
+ff1 = pd.read_csv('ff1.csv')
+ff2 = pd.read_csv('ff2.csv')
+
+ffk = pd.concat( [ff1, ff2], axis = 1)
+del(ff1)
+del(ff2)
 
 da = (
 DplyFrame(ffk) 
