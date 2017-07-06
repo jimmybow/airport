@@ -10,21 +10,18 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
-import webbrowser
 import pandas as pd
-import numpy as np
-import json
 from dplython import *
 from flask import Flask
 
-airlines = pd.read_csv('airlines.csv')
 airports = pd.read_csv('airports.csv')
 LDD = pd.read_csv('LDD.csv')
-flights = pd.read_csv('flights.csv')
+ffk = pd.read_csv('ffk.csv')
+
+del(diamonds)
 
 da = (
-DplyFrame(flights) 
->> mutate(d = X['Flight date'].str.split('/',expand = True).loc[:,2].astype(int) )
+DplyFrame(ffk) 
 >> group_by(X['Flight date'])
 >> summarize( counts = X.Airtime.size, d=X.d.max())
 >> arrange(X.d)
@@ -62,8 +59,8 @@ layoutD = dict(title = '飛航來源之計數',
 
 ############
 
-aplo = pd.concat( [flights['Source Airport'], 
-                   flights['Destination Airport']  ] ).drop_duplicates().rename('aplo')  
+aplo = pd.concat( [ffk['Source Airport'], 
+                   ffk['Destination Airport']  ] ).drop_duplicates().rename('aplo')  
 aplo = pd.DataFrame(aplo)
 
 airports2 = pd.merge(airports, LDD, how='left', left_on = 'Code',  right_on = "IATA")
@@ -86,20 +83,14 @@ aps = [ dict(
             )
         ))]
         
-L = LDD[["IATA",'Latitude',"Longitude"]]        
-ff = pd.merge(flights, L, how='left', left_on = 'Source Airport',  right_on = "IATA")
-ff = pd.merge(ff, L, how='left', left_on = 'Destination Airport',  right_on = "IATA", suffixes=('_s','_d'))     
 
-ffk = (
-DplyFrame(ff) 
->> mutate(d = X['Flight date'].str.split('/',expand = True).loc[:,2].astype(int) )
-)
-maxf = (ffk    
-    >> group_by(X['Source Airport'], X['Destination Airport']) 
-    >> summarize(cc = X.Airtime.size )
-    >> ungroup()
-    >> summarize(m = X.cc.max())
-    >> X.loc[0][0]                       
+maxf = (
+DplyFrame(ffk)    
+>> group_by(X['Source Airport'], X['Destination Airport']) 
+>> summarize(cc = X.Airtime.size )
+>> ungroup()
+>> summarize(m = X.cc.max())
+>> X.loc[0][0]                       
 )
 
 
@@ -167,7 +158,8 @@ def update_fig(index_time):
     s = index_time[0]+1
     e = index_time[1]+1
     
-    ff = (ffk
+    ff = (
+    DplyFrame(ffk)
     >> sift(X.d >= s, X.d <= e)     
     >> group_by(X['Source Airport'], X['Destination Airport']) 
     >> mutate(cnt = X.Airtime.size )                       
